@@ -1,0 +1,459 @@
+#include<iostream>
+#include<conio.h>
+#include<stdio.h>
+#include<fstream>
+using namespace std;
+class Bookshop
+{
+	public:
+		void Menu();
+		int issue(); 
+		int issued();
+		void pass();
+};
+	void Bookshop::Menu()
+	{
+		system("cls");
+		cout<<"\n\n\t\t\t\t************WELCOME TO YOUR BOOKSHOP************\n\n";
+		cout<<"1.TO  Add New Book"<<endl;
+		cout<<"2. TO Check Stock"<<endl;
+		cout<<"3. TO Check Specific Book"<<endl;
+		cout<<"4. TO Update Book"<<endl;
+		cout<<"5. TO Delete Book"<<endl;
+		cout<<"6. TO Issue Book"<<endl;
+		cout<<"7. TO Check Issued Book"<<endl;
+		cout<<"8. TO Exit"<<endl;
+	}
+	
+class Addbook:public Bookshop{
+	public:
+		
+		void add_book(){
+		
+		system("cls");
+		fstream file;
+		int no_copy,price;
+		string book_name,add_name,book_id;
+		cout<<"\t\t\t\t*** NEW BOOK ***"<<endl;
+		cout<<" Enter the Book ID : "<<endl;
+		cin>>book_id;
+		cout<<"Enter the Book Name : "<<endl;
+		cin>>book_name;
+		cout<<"Enter Author's  Name : "<<endl;
+		cin>>add_name;
+		cout<<"Enter total stock : "<<endl;
+		cin>>noof_copy;
+		cout<<"Enter the Price : "<<endl;
+		cin>>price;
+		file.open("book.txt",ios::out|ios::app);
+		file<<" "<<book_id<<" "<<book_name<<" "<<add_name<<" "<<noof_copy<<" "<<price<<"\n";
+		file.close();
+	}
+};
+
+class showbooks:public Addbook{
+	
+	public:
+		void Stock()
+	{
+		system("cls");
+		fstream file;
+		int noof_copy,price;
+		string book_name,book_id,add_name;
+		cout<<"Show All Books"<<endl;
+		file.open("book.txt",ios::in);
+		if(!file)
+		cout<<"File Openning Error..."<<endl;
+		else
+		{
+			cout<<" Book ID      Book      Author      No. of Copies      Price"<<endl;
+			file>>book_id>>book_name>>add_name>>noof_copy>>price;
+			while(!file.eof())
+			{
+				cout<<"      "<<book_id<<"        "<<book_name<<"       "<<add_name<<"\t\t"<<noof_copy<<"        "<<price<<" "<<endl;
+				file>>book_id>>book_name>>add_name>>noof_copy;
+			}
+			file.close();
+		}
+	}
+};
+
+class Checkbooks:public showbooks{
+	
+	public:
+		void check_book()
+	{
+		system("cls");
+		fstream file;
+		int no_copy,count=0;
+		string book_id,book_name,add_name,book_idd;
+		cout<<"Check Specific Book"<<endl;
+		file.open("book.txt",ios::in);
+		if(!file)
+		cout<<"File Openning Error..."<<endl;
+		else
+		{
+			cout<<"Book ID : "<<endl;
+			cin>>book_idd;
+			file>>book_id>>book_name>>add_name>>noof_copy;
+			while(!file.eof())
+			{
+				if(book_idd == book_id)
+				{
+					system("cls");
+					cout<<"\n\n\t\t\t\tCheck Specific Book";
+					cout<<"Book ID : "<<book_id<<endl;
+					cout<<" Name : "<<book_name<<endl;
+					cout<<" Author : "<<add_name<<endl;
+					cout<<"No. of Copies : "<<noof_copy<<endl;
+					count++;
+					break;	
+				}
+				file>>book_id>>book_name>>add_name>>no_copy;
+			}
+			file.close();
+			if(count == 0)
+			cout<<"\n\n Book ID Not Found...";
+		}
+	}
+};
+
+class Updatebook:public Checkbooks{
+	public:
+		void update_book()
+	{
+		system("cls");
+		fstream file,file1;
+		int noof_copy,noof_co,count=0;
+		string book_name,book_na,add_name,add_na,book_idd,book_id;
+		cout<<"Update Book Record"<<endl;
+		file1.open("book1.txt",ios::app|ios::out);
+		file.open("book.txt",ios::in);
+		if(!file)
+		cout<<"File Openning Error..."<<endl;
+		else
+		{
+			cout<<"Book ID : "<<endl;
+			cin>>book_id;
+			file>>book_idd>>book_name>>add_name>>noof_copy;
+			while(!file.eof())
+			{
+				if(book_id == book_idd)
+				{
+					system("cls");
+					cout<<" Update Book Record"<<endl;
+					cout<<" New Book Name : "<<endl;
+					cin>>book_na;
+					cout<<"Author Name : "<<endl;
+					cin>>add_na;
+					cout<<" No. of Copies : "<<endl;
+					cin>>noof_co;
+					file1<<" "<<book_id<<" "<<book_na<<" "<<add_na<<" "<<noof_co<<"\n";
+					count++;
+				}
+				else
+				file1<<" "<<book_idd<<" "<<book_name<<" "<<add_name<<" "<<noof_copy<<"\n";
+				file>>book_idd>>book_name>>add_name>>noof_copy;
+			}
+			if(count == 0)
+			cout<<"Book ID Not Found..."<<endl;
+		}
+		file.close();
+		file1.close();
+		remove("book.txt");
+		rename("book1.txt","book.txt");
+	}
+};
+
+class Deletebook:public Updatebook{
+
+	public:
+		void delete_book()
+	{
+		system("cls");
+		fstream file,file1;
+		int noof_copy,count=0;
+		string book_id,book_idd,book_name,add_name;
+		cout<<"\n\n\t\t\t\tDelete Book Record";
+		file1.open("book1.txt",ios::app|ios::out);
+		file.open("book.txt",ios::in);
+		if(!file)
+		cout<<"File Openning Error..."<<endl;
+		else
+		{
+			cout<<"Book ID : "<<endl;
+			cin>>book_id;
+			file>>book_idd>>book_name>>add_name>>noof_copy;
+			while(!file.eof())
+			{
+				if(book_id == book_idd)
+				{
+					system("cls");
+					cout<<"Delete Book Record"<<endl;
+					cout<<" One Book is Deleted Successfully..."<<endl;
+					count++;
+				}
+				else
+				file1<<" "<<book_idd<<" "<<book_name<<" "<<add_name<<" "<<noof_copy<<"\n";
+				file>>book_idd>>book_name>>add_name>>noof_copy;
+			}
+			if(count == 0)
+			cout<<"\n\n Book ID Not Found...";
+		}
+		file.close();
+		file1.close();
+		remove("book.txt");
+		rename("book1.txt","book.txt");
+	}
+};
+
+
+
+int Bookshop::issue(){
+	
+  	system("cls");
+  	fstream file;
+  	int book_id,m_num;
+  	string book_name,c_name;
+    int i;
+    
+  
+      cout<<"\n>>Please choose genre :"<<endl;
+      cout<<"\n 1.Fiction  2.Nonfiction \n\n 3.Action and adventure \n\n 4.Biography \n\n 5.Poetry \n\n 6.Mystery \n\n 7.Go to menu"<<endl;
+      cout<<"Enter your choice : "<<endl;
+      cin>>i;
+      
+      if(i>7){
+      	cout<<"Please enter correct option :("<<endl;
+      	
+	  }
+	  else
+      switch(i)
+      {
+          case 1: 
+          	system("cls");
+			cout<<"Enterthe  Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter the Book Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer's Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter  Membership Number: "<<endl;
+			cin>>m_num;			
+                  break;
+          case 2: 
+		  	system("cls");
+			cout<<"Enter the Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter Book's Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer's Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter Membership Number: "<<endl;
+			cin>>m_num;	
+                  break;
+                  
+          case 3:
+          	system("cls");
+			cout<<"Enter the Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter the Book Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter Membership Number: "<<endl;
+			cin>>m_num;	
+                  break;
+                  
+          case 4:
+          	system("cls");
+			cout<<"Enter Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter the Book Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer's Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter Membership Number: "<<endl;
+			cin>>m_num;	
+                  break;
+                  
+          case 5:
+		  	system("cls");
+			cout<<"Enter the Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter Book's Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter Membership Number: "<<endl;
+			cin>>m_num;	
+                  break;
+                  
+          case 6:
+          	system("cls");
+			cout<<"Enter Book ID : "<<endl;
+			cin>>book_id;
+		
+			cout<<"Enter Book Name: "<<endl;
+			cin>>book_name;
+			
+			cout<<"Enter Customer Name: "<<endl;
+			cin>>c_name;
+			
+			cout<<"Enter Membership Number: "<<endl;
+			cin>>m_num;	
+                  break;
+                  
+          case 7: system("cls");
+                 
+                Menu();
+                
+       	
+		file.open("issuebook.txt",ios::in);
+		file<<" "<<book_id<<" "<<book_name<<" "<<c_name<<" "<<m_num<<" "<<endl;
+		file.close();
+          
+                    getch();
+                    system("cls");
+                    issue();
+                    
+        getch();
+		Bookshop::Menu();            
+        }
+  }
+
+int Bookshop::issued(){
+		
+		system("cls");
+		fstream file;
+		int book_id,m_num;
+		string book_name,c_name;
+		cout<<"ISSUED BOOKS"<<endl;
+		file.open("issuebook.txt",ios::out|ios::app);
+		if(!file)
+		cout<<" File Openning Error..."<<endl;
+		else
+		{
+			cout<<" Book ID     Book     Customer name   Membership no."<<endl;
+			file>>book_id>>book_name>>c_name>>m_num;
+			while(!file.eof())
+			{
+				cout<<"    "<<book_id<<"     "<<book_name<<"     "<<c_name<<" "<<m_num<<" "<<endl;
+				file>>book_id>>book_name>>c_name>>m_num;
+			}
+			file.close();
+		getch();
+		Bookshop::Menu();
+		}		
+}
+
+void Bookshop::pass()
+{
+	
+	cout<<"---Enter Passcode to access the software---"<<endl;
+    int i=0;
+    char ch,st[21],ch1[21]={"secret"};
+    cout<<"Enter Password : "<<endl;
+    while(1)
+    {
+	    ch=getch();
+	    if(ch==13)
+	    {
+	        st[i]='\0';
+	        break;
+	    }
+	    else if(ch==8&&i>0)
+	    {
+	        i--;
+	        cout<<"\b \b";
+	    }
+	    else
+	    {
+	    cout<<"*";
+	    st[i]=ch;
+	    i++;
+	    }
+    }
+    ifstream inf("password.txt");
+    inf>>ch1;
+    inf.close();
+    for(i=0;st[i]==ch1[i]&&st[i]!='\0'&&ch1[i]!='\0';i++);
+    if(st[i]=='\0'&&ch1[i]=='\0')
+    {
+        system("cls");
+        Menu();
+    }
+    else
+    {
+        cout<<" Wrong Password.\n\n Try again"<<endl;
+        getch();
+        system("cls");
+       
+    }
+}
+
+main()
+{
+	int choice;
+	char x;
+	Deletebook d;
+	
+	d.pass();
+	p:
+	d.Menu();
+	cout<<"\n\n Your Choice : ";
+	cin>>choice;
+	switch(choice)
+	{
+		case 1:
+			do
+			{
+			d.add_book();
+			cout<<" Do You Want to addbook another Book (y,n) : "<<endl;
+			cin>>x;
+		    }while(x == 'y');
+		    d.Menu();
+			break;
+		case 2:
+			d.Stock();
+			break;
+		case 3:
+			d.check_book();
+			break;
+		case 4:
+			d.update_book();
+			break;
+		case 5:
+			d.delete_book();
+			break;
+		case 6:
+			d.issue();
+			cout<<" Record stored. You can Issue the book."<<endl;
+			break;
+		case 7:
+			d.issued();
+			break;
+		case 8:
+			exit(0);
+
+		default:
+			cout<<" Invalid Value...Please Try Again..."<<endl;
+	}
+	getch();
+	goto p;
+}
